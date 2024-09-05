@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 // Proxy-Liste laden
-const rawProxyList = fs.readFileSync('./proxy-list.json');
+const rawProxyList = fs.readFileSync('/mnt/data/proxy-list.json');
 const proxyList = JSON.parse(rawProxyList).data; // Zugriff auf das "data" Array
 
 // Funktion zum zufälligen Proxy-Auswählen
@@ -26,15 +26,13 @@ app.use('/proxy', (req, res, next) => {
 
   try {
     const proxyUrl = getRandomProxy();
+    console.log(`Routing request through proxy: ${proxyUrl}`);
 
-    console.log(`Routing request to: ${proxyUrl}`);
-
+    // Proxy-Middleware mit Proxy-Server-URL
     const proxyMiddleware = createProxyMiddleware({
       target: targetUrl,
       changeOrigin: true,
-      onProxyReq: (proxyReq, req, res) => {
-        proxyReq.setHeader('X-Forwarded-For', proxyUrl);
-      },
+      router: () => proxyUrl, // Verwende den Proxy-Server hier
       onError: (err, req, res) => {
         console.error('Proxy error:', err);
         res.status(500).send('Proxy failed.');
