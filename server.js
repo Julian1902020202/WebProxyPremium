@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 // Proxy-Liste laden
-const rawProxyList = fs.readFileSync('/mnt/data/proxy-list.json');
+const rawProxyList = fs.readFileSync('./proxy-list.json');
 const proxyList = JSON.parse(rawProxyList).data; // Zugriff auf das "data" Array
 
 // Funktion zum zufälligen Proxy-Auswählen
